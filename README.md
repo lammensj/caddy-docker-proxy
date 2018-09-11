@@ -259,3 +259,7 @@ import (
   _ "github.com/lucaslorentz/caddy-docker-proxy/plugin"
 )
 ```
+
+
+
+docker run --rm -it -v //./pipe/docker_engine://./pipe/docker_engine lucaslorentz/caddy-docker-proxy:ci-nanoserver-1803 -log stdout -agree -email lucaslorentzlara@hotmail.com

@@ -7,7 +7,7 @@ import (
 	"syscall"
 )
 
-func ReloadCaddy() {
+func SignalReload() {
 	self, _ := os.FindProcess(os.Getpid())
 	self.Signal(syscall.SIGUSR1)
 }

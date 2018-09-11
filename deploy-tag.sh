@@ -41,6 +41,14 @@ if [[ "${TRAVIS_TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-.*)?$ ]]; then
     docker push lucaslorentz/caddy-docker-proxy:alpine-arm32v6
     docker push lucaslorentz/caddy-docker-proxy:${PATCH_VERSION}-alpine-arm32v6
     docker push lucaslorentz/caddy-docker-proxy:${MINOR_VERSION}-alpine-arm32v6
+
+    # nanoserver-1803
+    docker tag lucaslorentz/caddy-docker-proxy:ci-nanoserver-1803 lucaslorentz/caddy-docker-proxy:nanoserver-1803
+    docker tag lucaslorentz/caddy-docker-proxy:ci-nanoserver-1803 lucaslorentz/caddy-docker-proxy:${PATCH_VERSION}-nanoserver-1803
+    docker tag lucaslorentz/caddy-docker-proxy:ci-nanoserver-1803 lucaslorentz/caddy-docker-proxy:${MINOR_VERSION}-nanoserver-1803
+    docker push lucaslorentz/caddy-docker-proxy:nanoserver-1803
+    docker push lucaslorentz/caddy-docker-proxy:${PATCH_VERSION}-nanoserver-1803
+    docker push lucaslorentz/caddy-docker-proxy:${MINOR_VERSION}-nanoserver-1803
 else
   echo "Skipping version deploy"
 fi

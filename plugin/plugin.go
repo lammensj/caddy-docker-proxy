@@ -5,5 +5,9 @@ import (
 )
 
 func init() {
-	caddy.RegisterCaddyfileLoader("docker", CreateDockerLoader())
+	caddy.RegisterCaddyfileLoader("docker", CreateDockerLoader(reload))
+}
+
+func reload() {
+	SignalReload()
 }

@@ -16,18 +16,20 @@ const poolInterval = 10 * time.Second
 
 // DockerLoader generates caddy files from docker swarm information
 type DockerLoader struct {
+	reload       func()
 	initialized  bool
 	dockerClient *client.Client
 	generator    *CaddyfileGenerator
 	timer        *time.Timer
 	skipEvents   bool
-	Input        caddy.CaddyfileInput
+	input        caddy.CaddyfileInput
 }
 
 // CreateDockerLoader creates a docker loader
-func CreateDockerLoader() *DockerLoader {
+func CreateDockerLoader(reload func()) *DockerLoader {
 	return &DockerLoader{
-		Input: caddy.CaddyfileInput{
+		reload: reload,
+		input: caddy.CaddyfileInput{
 			ServerTypeName: "http",
 		},
 	}
@@ -70,7 +72,7 @@ func (dockerLoader *DockerLoader) Load(serverType string) (caddy.Input, error) {
 
 		go dockerLoader.monitorEvents()
 	}
-	return dockerLoader.Input, nil
+	return dockerLoader.input, nil
 }
 
 func (dockerLoader *DockerLoader) monitorEvents() {
@@ -116,7 +118,7 @@ func (dockerLoader *DockerLoader) update(reloadIfChanged bool) bool {
 
 	newContents := dockerLoader.generator.GenerateCaddyFile()
 
-	if bytes.Equal(dockerLoader.Input.Contents, newContents) {
+	if bytes.Equal(dockerLoader.input.Contents, newContents) {
 		return false
 	}
 
@@ -131,10 +133,10 @@ func (dockerLoader *DockerLoader) update(reloadIfChanged bool) bool {
 	} else {
 		log.Printf("[INFO] New CaddyFile:\n%s", newInput.Contents)
 
-		dockerLoader.Input = newInput
+		dockerLoader.input = newInput
 
 		if reloadIfChanged {
-			ReloadCaddy()
+			dockerLoader.reload()
 		}
 	}
 
